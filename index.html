@@ -37,13 +37,13 @@
     <li>어</li>
     <div class="timer">
         <div class="timer__controls">
-          <button data-time="20" class="timer__button">20 Secs</button>
-          <button data-time="300" class="timer__button">Work 5</button>
-          <button data-time="900" class="timer__button">Quick 15</button>
-          <button data-time="1200" class="timer__button">Snack 20</button>
-          <button data-time="3600" class="timer__button">Lunch Break</button>
+          <button data-time="30" class="timer__button">30초</button>
+          <button data-time="300" class="timer__button">5분</button>
+          <button data-time="900" class="timer__button">15분</button>
+          <button data-time="1200" class="timer__button">20분</button>
+          <button data-time="3600" class="timer__button">1시간</button>
           <form name="customForm" id="custom">
-            <input type="text" name="minutes" placeholder="Enter Minutes">
+            <input type="text" name="minutes" placeholder="시간을 입력해 주세요">
           </form>
         </div>
         <div class="display">
@@ -53,7 +53,7 @@
       </div>
     
       <script src="scripts.js"></script>
-      
+
     <script type="text/javascript">
         let countdown;
 const timerTimeLeft = document.querySelector('.display__time-left');
@@ -93,7 +93,7 @@ function displayEndTime(timestamp) {
     const hour = end.getHours();
     const adjustedHour = hour > 12 ? hour - 12 : hour;
     const mins = end.getMinutes();
-    endTime.textContent = `Be back at ${adjustedHour}:${mins < 10 ? '0' : ''}${mins}`;
+    endTime.textContent = `끝나는 시각 ${adjustedHour}:${mins < 10 ? '0' : ''}${mins}`;
 }
 
 function startTimer() {
