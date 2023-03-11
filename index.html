@@ -35,6 +35,25 @@
     <li><a href ="sublist.html" target= "blank">주제 목록</a></li>   
     <li>토론장</li>
     <li>어</li>
+    <div class="timer">
+        <div class="timer__controls">
+          <button data-time="20" class="timer__button">20 Secs</button>
+          <button data-time="300" class="timer__button">Work 5</button>
+          <button data-time="900" class="timer__button">Quick 15</button>
+          <button data-time="1200" class="timer__button">Snack 20</button>
+          <button data-time="3600" class="timer__button">Lunch Break</button>
+          <form name="customForm" id="custom">
+            <input type="text" name="minutes" placeholder="Enter Minutes">
+          </form>
+        </div>
+        <div class="display">
+          <h1 class="display__time-left"></h1>
+          <p class="display__end-time"></p>
+        </div>
+      </div>
+    
+      <script src="scripts.js"></script>
+      
     <script type="text/javascript">
         let countdown;
 const timerTimeLeft = document.querySelector('.display__time-left');
@@ -88,7 +107,7 @@ document.customForm.addEventListener('submit', function(e) {
     const mins = this.minutes.value;
     timer(mins * 60);
     this.reset();
-});
+})
     </script>
     <p>위 타이머는 카운트다운 타이머입니다 원하는 주제로 토론할 시간을 정하여서 입력해 주시면<br>타이머가 돌아갈 것입니다. 시간이 다될때까지 토론을 즐기세요!</p>
     </ul>
