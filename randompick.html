@@ -402,7 +402,6 @@
 
 			//당첨인원수
 			//prizewinnerCnt = $("#prizewinnerCnt").val();
-/*
 			for(var i=0; i<prizewinnerCnt;i++)
 			{
 				if(runtimeState == true)
@@ -414,9 +413,8 @@
 				lucky();
 				StOp();
 			}
-*/
 
-/*
+
 			var i=0;
 			while(i<prizewinnerCnt)
 			{
@@ -427,7 +425,6 @@
 					i++;
 				}
 			}
-*/
 			lucky(); //추첨시작
 			StOp(); //추천종료
 		}
@@ -510,7 +507,7 @@
 				<div style="height:10px;"></div>
 				추첨인원수 : <input type="text" id="max_num" name="max_num" maxlength="5" class="onlynum" style="width:40px;padding:5px;" value="10" onChange="lucky_init();">
 				&nbsp;<input type="button" value="삭제" onClick="$('#max_num').val('');" style="width:60px;padding:5px;">
-<!--
+
 				-&nbsp;당첨인원수 : 
 				<select id="prizewinnerCnt" name="prizewinnerCnt" onChange="lucky_init();" style="width:60px;padding:5px;">
 					<option value="1">1명</option>
@@ -524,7 +521,7 @@
 					<option value="9">9명</option>
 					<option value="10">10명</option>
 				</select>
--->
+
 			</div>
 			<div id="dip_p2" style="display: none;">
 				<div style="height:10px;"></div>
@@ -607,10 +604,10 @@
 			<div class="clear"></div>
 			<div style="height:5px;"></div>
 			<div style="color:#008800;" id="lucky_seq_content">당첨결과 : </div>
-			<!--
+			
 			<div style="height:5px;"></div>
 			<div style="color:#0000ff;">사용방법 : 추첨인원수 입력후 추첨하기 버튼클릭</div>
-			-->
+			
 			<div style="height:5px;"></div>
 			<div style="color:#ff0000;">
 				공유주소 : <input type="text" size="22" onClick = "this.focus();this.setSelectionRange(0,this.value.length);" value="www.zetswing.com/lucky">
