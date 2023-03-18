@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<!-- 아래 코드를 안넣으면 익스10,9,8 에서 문서모드가 익스플로러7로 잡혀서 스타일이 깨져서 나온다. -->
+	<!-- 진심 익스플로러가 싫다. -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><!-- IE 최신버전으로 렌더링 -->
+	<meta http-equiv="content-type" content="text/html; charset=euc-kr">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+	<meta property="og:url"           content="http://www.zetswing.com/lucky" />
+	<meta property="og:type"          content="website" />
+	<meta property="og:title"         content="번호이름 추첨기" />
+	<meta property="og:description"   content="원하는 인원수로 쉽게 번호를 추첨할 수 있습니다. 그리고 원하는 후보들로 쉽게 이름을 추첨할수 있습니다." />
+	<meta property="og:image"         content="https://lh5.ggpht.com/kZiALa5_Y4ghaLAj_hO26pxGVYREhEqd5W4oqz5qZAjTmz_265AoQz7DFbJUZx_x1ro=w300-rw" />
+
+	<title>번호이름 추첨기</title>
+	<link rel="stylesheet" href="/style.css" type="text/css">
+	<script type="text/javascript" src="/js/common.js"></script>
+	<!--<script type="text/javascript" src="/js/jquery-1.11.0.js"></script>-->
+	<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+	<style>
+		body {
+			margin:0px;
+		}
+
+		#wrap {
+			margin: 0px auto; /* auto를 빼면 좌측정렬이 된다. */
+			padding: 5px;
+			width: 100%;
+			max-width: 460px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-ms-box-sizing: border-box;
+			box-sizing: border-box;
+			border:0px solid #CCCCCC;
+		}
+
+		#wrap #header {
+			border:0px solid #00ff00;
+			text-align:center;
+			font-size:40px;
+			font-weight:bold;
+			font-family:Tahoma,돋움;
+			/* 아래 안써주면 피씨버전과 모바일버전이 다르게 출력된다. */
+			/* 아래코드를 재정의하지 않으면 피씨버전에서 td의 스타일값을 상속받는다. */
+			/* td태그안에 div태그를 사용하면 td태그에 적용된 스타일이 div태그에 자동으로 상속된다. 그래서 div 태그에 다시 스타일이 재정의 하면  상속받은 스타일은 없어지고 새로 적용된다. */
+			line-height:50px;
+			background-color:#ffffff;
+		}
+
+		#wrap #lucky {
+			border:0px solid #ff0000;
+		}
+
+		#wrap #lucky span.title {
+			display: block;
+			font-size: 12px;
+			font-weight: bold;
+			margin: 10px 0 5px 0;
+		}
+
+		#wrap #lucky div#lucky_output {
+			width: 100%;
+			height:90px;
+			line-height:75px;
+			text-align:center;
+			font-size:60px; /* 90이상되면 아이폰 브라우저에서 이름추첨이 잘린다. */
+			font-family:Tahoma,돋움;
+			background-color:#000000;
+			color:#ffffff;
+			border-radius:10px;
+			border:5px solid #ff0000;
+			cursor:Pointer; /* 커서 손모양 */
+
+			/* 아래 코드를 지우면 아이폰 사파리, 아이폰 크롬 브라우저에서 text필드가 가로크기 100%를 넘어간다. */
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-ms-box-sizing: border-box;
+			box-sizing: border-box;
+
+		}
+
+		#wrap #lucky textarea#cookie_lucky_name_input {
+			width: 100%;
+			height:80px;
+			padding: 0px;
+		}
+
+		#wrap #lucky input.text {
+			width: 100%;
+			padding: 10px;
+			border: 2px solid #d4d4d4;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-ms-box-sizing: border-box;
+			box-sizing: border-box;
+			margin-bottom: 10px;
+		}
+
+		#wrap #lucky .start_button {
+			float: left;
+			background-color: #0087e1;
+			color: #fff;
+			padding: 10px 20px 10px 20px;
+			font-size: 14px;
+			font-weight: bold;
+			cursor:pointer;
+			border: 0;
+		}
+
+		#wrap #lucky .reset_button {
+			float: right;
+			background-color: #ffffff;
+			color: #aaaaaa;
+			padding: 10px 20px 10px 20px;
+			font-size: 14px;
+			font-weight: bold;
+			border: 1px solid #aaaaaa;
+			cursor:pointer;
+		}
+
+		#wrap #lucky .submit:hover, #wrap form .link a:hover {
+		background-color: #555;
+		border: 0;
+		color: #fff;
+		padding: 10px 20px 10px 20px;
+		}
+
+		#wrap #lucky .link {
+		float: right;
+		margin-top: 10px;
+		}
+
+		#wrap #lucky .link a {
+		display: inline-block;
+		margin-left: 5px;
+		background-color: #fafafa;
+		color: #7e7e7e;
+		padding: 9px 19px 9px 19px;
+		font-size: 12px;
+		font-weight: bold;
+		border: 1px solid #e4e4e4;
+		}
+
+		#wrap #lucky .terms_msg {
+		display: block;
+		margin-top: 5px;
+		font-size: 11px;
+		text-align: right;
+		color: #adadad;
+		}
+
+		#wrap #lucky span.msg {
+		font-size: 12px;
+		color: #7e7e7e;
+		letter-spacing: -1px;
+		}
+	</style>
+	<script>
+		$(document).ready (function() {
+			//alert( $(document).width() ); //문서의 가로크기, 아이폰5s 사파리에서 325 출력됨, 아이폰se1 사파리에서 320 출력됨
+			//alert( $(window).width() ); //브라우저의 가로크기, 아이폰5s 사파리에서 320 출력됨, 아이폰se1 사파리에서 320 출력됨
+
+			// 쿠키값이 있다면 추첨인원수 자동대입
+			if(get_cookie('cookie_lucky_number') != "")
+			{
+				//document.getElementById("max_num").value = get_cookie("cookie_lucky_number");
+				$("#max_num").val(get_cookie("cookie_lucky_number"));
+
+				// 엔터값과 한글을 위해서 unescape 함수추가
+				document.getElementById("cookie_lucky_name_input").value = unescape(get_cookie('cookie_lucky_name'));
+			}
+
+			// 제이쿼리를 이용한 번호만 입력받기!
+			$(".onlynum").keyup(function(){$(this).val( $(this).val().replace(/[^0-9]/g,"") );} );
+			$(".onlyeng").keyup(function(){$(this).val( $(this).val().replace(/[^\!-z]/g,"") );} );
+
+			//screen.width
+			//$("#show").text(screen.width);
+		});//end of "$(document).ready (function() {"
+
+		var totalnumbers=1; // 출력갯수 6개..
+		var lowerbound=1; // 가장작은수
+		var upperbound=1; // 가장큰수
+
+		var prizewinnerCnt=1; //당첨인원수
+		
+		var arr_count=0;
+
+		var runtimeState=false;
+
+		// 당첨결과
+		var lucky_seq_content_arr=new Array();
+
+		function lucky()
+		{
+			runtimeState = true; //추첨실행중
+
+			$("#lucky_ready").html("<font color=gray>추첨중...</font>");
+
+			if(document.getElementById("lucky_kind_number").checked == true)
+			{
+				//B=' '; 
+				//맨앞에 공백값
+				B='';
+
+				LottoNumbers=new Array();
+
+				//조건 랜덤숫자 출력
+				RandomNumber = Math.round(lowerbound+Math.random()*(upperbound-lowerbound));
+
+				//alert(lucky_seq_content_arr.length);
+
+				//추첨인원수 만큼만 중복체크한다.
+				if(lucky_seq_content_arr.length < upperbound)
+				{
+					for (j = 0; j < lucky_seq_content_arr.length; j)
+					{
+						// 이미 당첨된 숫자가 나오면 다시 0번째부터 추첨한다.
+						if (RandomNumber == lucky_seq_content_arr[j])
+						{
+							RandomNumber=Math.round(lowerbound+Math.random()*(upperbound-lowerbound));
+							j = -1;
+						}
+						j++;
+					}
+				}
+				
+				OutPut = RandomNumber;
+			}
+			else if(document.getElementById("lucky_kind_name").checked == true)
+			{
+				str_name = document.getElementById("cookie_lucky_name_input").value;
+				arr_name = str_name.split("\n");
+				upperbound = arr_name.length;
+				
+				//alert(arr_name[1]);
+				RandomNumber = Math.round(lowerbound+Math.random()*(upperbound-lowerbound));
+
+				//추첨인원수 만큼만 중복체크한다.
+				if(lucky_seq_content_arr.length < upperbound)
+				{
+					for (j = 0; j < lucky_seq_content_arr.length; j)
+					{
+						// 이미 당첨된 숫자가 나오면 다시 0번째부터 추첨한다.
+						if (RandomNumber == lucky_seq_content_arr[j])
+						{
+							RandomNumber=Math.round(lowerbound+Math.random()*(upperbound-lowerbound));
+							j = -1;
+						}
+						j++;
+					}
+				}
+
+				// 인덱스의 값을 가져옴
+				OutPut = arr_name[RandomNumber-1];
+			}
+			else if(document.getElementById("lucky_kind_lunch").checked == true)
+			{
+				str_name = document.getElementById("cookie_lucky_lunch_input").value;
+				arr_name = str_name.split("\n");
+				upperbound = arr_name.length;
+				
+				//alert(arr_name[1]);
+				RandomNumber = Math.round(lowerbound+Math.random()*(upperbound-lowerbound));
+
+				//추첨인원수 만큼만 중복체크한다.
+				if(lucky_seq_content_arr.length < upperbound)
+				{
+					for (j = 0; j < lucky_seq_content_arr.length; j)
+					{
+						// 이미 당첨된 숫자가 나오면 다시 0번째부터 추첨한다.
+						if (RandomNumber == lucky_seq_content_arr[j])
+						{
+							RandomNumber=Math.round(lowerbound+Math.random()*(upperbound-lowerbound));
+							j = -1;
+						}
+						j++;
+					}
+				}
+
+				// 인덱스의 값을 가져옴
+				OutPut = arr_name[RandomNumber-1];
+			}
+
+			//if (document.getElementById) document.getElementById("lucky_output").value = OutPut;
+			$("#lucky_output").text(OutPut);
+
+			T=setTimeout('lucky()',20);
+		}
+			
+		//추첨시간 1초
+		function StOp()
+		{
+			setTimeout('StOp_do()',1000);
+		}
+
+		function addZero(i)
+		{
+			if (i < 10)
+			{
+				i = "0" + i;
+			}
+			return i;
+		}
+
+		function StOp_do()
+		{
+			//추첨처리되는거 정지
+			clearTimeout(T);
+
+			$("#lucky_ready").html("<font color=red>추첨완료</font>");
+
+			document.getElementById("lucky_start_btn").disabled = ""; //추첨하기 버튼 활성화
+			document.getElementById("lucky_start_btn").innerText  = "추첨하기";
+
+			var today = new Date();
+
+			var year = today.getFullYear();
+			var mon = addZero(today.getMonth()+1);
+			var dat = addZero(today.getDate());
+			var H = addZero(today.getHours());
+			var M = addZero(today.getMinutes());
+			var s = addZero(today.getSeconds());
+			var current_time = "("+year+"-"+mon+"-"+dat+" "+H+":"+M+":"+s+")";
+			$("#lucky_time").text(current_time);
+
+			if(document.getElementById("lucky_kind_number").checked == true || document.getElementById("lucky_kind_name").checked == true)
+			{
+				if(arr_count == 0)
+				{
+					//alert(OutPut); 당첨된 번호 또는 이름
+					$("#lucky_seq_content").append(" " + OutPut);
+				}
+				else
+				{
+					$("#lucky_seq_content").append(" , " + OutPut);
+				}
+			}
+			else if(document.getElementById("lucky_kind_lunch").checked == true)
+			{
+					$("#lucky_seq_content").html("당첨결과 : 오늘 점심은 <b>" + OutPut + "</b> 드세요!");
+			}
+
+			// 당첨된 인덱스값을 배열에 저장
+			lucky_seq_content_arr[arr_count] = RandomNumber;
+			arr_count++;
+
+			runtimeState = false; //추첨중 종료
+
+			//배열변수 갯수
+			//alert(lucky_seq_content_arr.length);
+
+			//배열변수 내용 텍스트로 출력
+			//alert(lucky_seq_content_arr.toString());
+		}
+			
+		function start()
+		{
+			//아래 코드를 넣어야 아이폰 사파리에서 "추첨기 출력박스"를 연속으로 클릭시 추첨하기 클릭을 누른 효과가 난다. 안넣으면 "추첨기 출력박스"를 클릭시 포커스가 들어가서 출력박스 클릭이 안된다.
+			$("#lucky_start_btn").focus();
+
+			document.getElementById("lucky_start_btn").disabled = "disabled"; //추첨하기 버튼 비활성화
+			document.getElementById("lucky_start_btn").innerText  = "추첨중...";
+			
+			//번호추첨
+			if(document.getElementById("lucky_kind_number").checked == true)
+			{
+				// 추첨인원 미입력시 기본값 10 입력됨
+				if(document.getElementById("max_num").value == "")
+				{
+					document.getElementById("max_num").value = "10";
+				}
+				//30일간 쿠키유지
+				set_cookie("cookie_lucky_number", $("#max_num").val(), 24*30);
+			}
+			//이름추첨
+			else if(document.getElementById("lucky_kind_name").checked == true)
+			{
+				// 추첨후보 미입력시 에러메세지 출력
+				if(document.getElementById("cookie_lucky_name_input").value == "")
+				{
+					alert("추첨할 후보를 입력해주세요.");
+					document.getElementById("lucky_start_btn").disabled = ""; //추첨하기 버튼 활성화
+					document.getElementById("lucky_start_btn").innerText  = "추첨하기";
+					//document.getElementById("cookie_lucky_name_input").focus();
+					$("#cookie_lucky_name_input").focus();
+					return false;
+				}
+				//30일간 쿠키유지
+				set_cookie("cookie_lucky_name", $("#cookie_lucky_name_input").val(), 24*30, window.location.host);
+			}
+			//점심추첨
+			else if(document.getElementById("lucky_kind_lunch").checked == true)
+			{
+				//aaaa
+			}
+
+			// 추첨인원 전역변수 대입
+			upperbound = document.getElementById("max_num").value;
+
+			//당첨인원수
+			//prizewinnerCnt = $("#prizewinnerCnt").val();
+/*
+			for(var i=0; i<prizewinnerCnt;i++)
+			{
+				if(runtimeState == true)
+				{
+					i--;
+					continue;
+				}
+
+				lucky();
+				StOp();
+			}
+*/
+
+/*
+			var i=0;
+			while(i<prizewinnerCnt)
+			{
+				if(runtimeState == false)
+				{
+					lucky();
+					StOp();
+					i++;
+				}
+			}
+*/
+			lucky(); //추첨시작
+			StOp(); //추천종료
+		}
+
+		function fn_setAddTc(n)
+		{
+			for(var i = 1; i <= 2; i++)
+			{
+				if(n == i)
+				{
+					$("#lucky_kind_"+i).css("font-weight","bold");
+					$("#dip_p"+i).show("");
+				}
+				else
+				{
+					$("#lucky_kind_"+i).css("font-weight","");
+					$("#dip_p"+i).hide("");
+				}
+			}
+
+		lucky_init();
+
+		}
+
+		function lucky_init()
+		{
+			//배열값 초기화 (length값까지 0으로 된다.)
+			lucky_seq_content_arr = new Array();
+
+			// 당첨결과 배열값 공백처리
+			//for(aa=0; aa<lucky_seq_content_arr.length; aa++)
+			//{
+			//	lucky_seq_content[aa] = "";
+			//}
+
+			//alert(lucky_seq_content_arr.length);
+
+			// 당첨결과 초기화
+			arr_count = 0;
+			$("#lucky_seq_content").text("당첨결과 : ");
+		}
+	</script>
+</head>
+<body>
+
+<!-- 페이스북 공유하기 사용 -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) return;
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v2.8&appId=1402006703417169";
+	fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+	<div id="wrap">
+		<!--<div style="height:5px;"></div>-->
+		<div id="header">
+			번호이름 추첨기
+		</div>
+		<div style="height:5px;"></div>
+		<div id="lucky">
+			<!--<input type="text" id="lucky_output" readonly  onClick="start();">-->
+			<div id="lucky_output" onClick="start();"></div>
+			<div style="height:10px;"></div>
+			<div>
+				<span id="lucky_kind_1" style="font-weight:bold;font-size:14px;">
+					<input type="radio" name="lucky_kind" id="lucky_kind_number" value="1" checked="checked" onclick="fn_setAddTc(1);"><label for="lucky_kind_number">번호추첨</label>
+				</span>
+				<span id="lucky_kind_2" style="font-size:14px;">
+					<input type="radio" name="lucky_kind" id="lucky_kind_name" value="2"  onclick="fn_setAddTc(2);" ><label for="lucky_kind_name">이름추첨</label>
+				</span>
+				<span id="lucky_kind_2" style="font-size:14px;">
+					<input type="radio" name="lucky_kind" id="lucky_kind_lunch" value="3"  onclick="fn_setAddTc(3);" ><label for="lucky_kind_lunch">점심추첨</label>
+				</span>
+				<span style="float: right;padding-right:5px;border:0px solid #ff0000;line-height:24px;display: none;" id="lucky_time">(----.--.-- --:--:--)</span>
+				<span style="float: right;padding-right:5px;border:0px solid #ff0000;line-height:24px;display: none;" id="lucky_ready">추첨준비</span>
+			</div>
+			<div id="dip_p1">
+				<div style="height:10px;"></div>
+				추첨인원수 : <input type="text" id="max_num" name="max_num" maxlength="5" class="onlynum" style="width:40px;padding:5px;" value="10" onChange="lucky_init();">
+				&nbsp;<input type="button" value="삭제" onClick="$('#max_num').val('');" style="width:60px;padding:5px;">
+<!--
+				-&nbsp;당첨인원수 : 
+				<select id="prizewinnerCnt" name="prizewinnerCnt" onChange="lucky_init();" style="width:60px;padding:5px;">
+					<option value="1">1명</option>
+					<option value="2">2명</option>
+					<option value="3">3명</option>
+					<option value="4">4명</option>
+					<option value="5">5명</option>
+					<option value="6">6명</option>
+					<option value="7">7명</option>
+					<option value="8">8명</option>
+					<option value="9">9명</option>
+					<option value="10">10명</option>
+				</select>
+-->
+			</div>
+			<div id="dip_p2" style="display: none;">
+				<div style="height:10px;"></div>
+				추첨할 후보들 (엔터로 구분)
+				<div style="height:5px;"></div>
+				<textarea name="cookie_lucky_name_input" id="cookie_lucky_name_input" placeholder="여기에 추첨할 후보를 입력하시오." onChange="lucky_init();">홍길동
+이영자
+김미영</textarea>
+			</div>
+			<div id="dip_p3" style="display: none;">
+				<textarea name="cookie_lucky_lunch_input" id="cookie_lucky_lunch_input" style="display: none;">탕수육
+짜장면
+짬뽕
+볶음밥
+피자
+치킨
+샌드위치
+햄버거
+라면
+순두부찌개
+소고기국밥
+콩나물국밥
+김치찌개
+부대찌개
+돈까스
+스테이크
+된장찌개
+뚝배기불고기
+떡볶이
+초밥
+원숭이골
+비빔밥
+팔보채
+양장피
+스파게티
+베트남쌀국수
+족발보쌈
+김밥
+컵밥
+카레돈까스
+카레밥
+짬뽕밥
+소세지빵
+설렁탕
+육개장
+순대국밥
+마파두부밥
+잡채밥
+짜장밥
+짬뽕밥
+우거지탕
+감자탕
+갈비탕
+곰발바닥
+알탕
+대구탕
+칼국수
+닭갈비
+냉면
+막국수
+모밀국수
+라멘
+내장탕
+악어고기
+매운탕
+편의점도시락
+샐러드
+소머리국밥
+회덮밥
+연어덮밥
+가정식백반</textarea>
+			</div>
+			<div style="height:10px;"></div>
+			<div>
+				<!-- input 태그를 사용하면 익스11에서는 동작하지 않는다. -->
+				<button type="button" class="start_button" onClick="start();" id="lucky_start_btn">추첨하기</button>
+				<!--<button type="button" onClick="alert(runtimeState);">a</button>-->
+				<button type="button" class="reset_button" onClick="document.location.reload();">새로고침 </button>
+			</div>
+			<div class="clear"></div>
+			<div style="height:5px;"></div>
+			<div style="color:#008800;" id="lucky_seq_content">당첨결과 : </div>
+			<!--
+			<div style="height:5px;"></div>
+			<div style="color:#0000ff;">사용방법 : 추첨인원수 입력후 추첨하기 버튼클릭</div>
+			-->
+			<div style="height:5px;"></div>
+			<div style="color:#ff0000;">
+				공유주소 : <input type="text" size="22" onClick = "this.focus();this.setSelectionRange(0,this.value.length);" value="www.zetswing.com/lucky">
+				<div class="fb-share-button" data-href="http://www.zetswing.com/lucky" data-layout="button_count" data-size="small" data-mobile-iframe="true"></div>
+			</div>
+			<div style="height:10px;"></div>
+			<div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<!-- 네이버 애널리틱스 -->
+<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript">
+if(!wcs_add) var wcs_add = {};
+wcs_add["wa"] = "20e8a2c9021bec";
+wcs_do();
+</script>
